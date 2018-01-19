@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { GoogleMap, withGoogleMap, withScriptjs } from 'react-google-maps';
 import { MAP } from 'react-google-maps/lib/constants';
 import DrawingManager from './drawing-manager';
-import InfoBox from './info-box';
 import { DEFAULT_COORDS } from '../util/constants';
 
 class MyMap extends React.Component {
@@ -11,31 +10,22 @@ class MyMap extends React.Component {
   constructor(props) {
     super(props);
     this.google = window.google.maps;
-    this.state = {
-      infoBoxCoords: new this.google.LatLng(DEFAULT_COORDS.lat, DEFAULT_COORDS.lng),
-      infoBoxVisible: false,
-    };
   }
 
   createPoly = (coords) => {
-    const latLngs = coords.map(c => new window.google.maps.LatLng(c.lat, c.lng))
-    const path = new window.google.maps.MVCArray(latLngs);
+    const latLngs = coords.map(c => new this.google.LatLng(c.lat, c.lng))
+    const path = new this.google.MVCArray(latLngs);
     const options = {
       fillColor: '#888',
-      paths: new window.google.maps.MVCArray([path]),
+      paths: new this.google.MVCArray([path]),
       visible: true,
       map: this.context[MAP],
     };
-    return new window.google.maps.Polygon(options);
+    return new this.google.Polygon(options);
   }
 
   onPolygonComplete = (poly) => {
-    const bounds = new this.google.LatLngBounds();
-    poly.getPath().forEach(coord => bounds.extend(coord));
-    this.setState({
-      infoBoxCoords: bounds.getCenter(),
-      infoBoxVisible: true,
-    });
+    console.log('poly created')
   }
 
   render() {
@@ -44,10 +34,6 @@ class MyMap extends React.Component {
         defaultZoom={8} 
         defaultCenter={DEFAULT_COORDS}
       >
-        <InfoBox
-          position={this.state.infoBoxCoords}
-          visible={this.state.infoBoxVisible}
-        />
         <DrawingManager onPolygonComplete={this.onPolygonComplete}/>
       </GoogleMap>
     );

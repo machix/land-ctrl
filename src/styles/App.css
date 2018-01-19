@@ -5,15 +5,17 @@ body, #root, .App {
   padding: 0px;
 }
 
-.map {
-  height: 100%;
-  width: 100%;
+.App {
+  display: flex;
 }
 
-.info-box {
-  background: black;
-  color: white;
-  padding: 5px;
-  border-radius: 3px;
-  border: 1px solid darkgrey;
+.map {
+  height: 100%;
+  width: 70%;
+}
+
+.sidepanel {
+  height: 100%;
+  width: 30%;
+  background: rgb(161, 202, 100);
 }
