@@ -2,6 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { GoogleMap, withGoogleMap, withScriptjs } from 'react-google-maps';
 import { MAP } from 'react-google-maps/lib/constants';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as actionCreators from '../redux/actions/appActions';
+
 import DrawingManager from './drawing-manager';
 import { DEFAULT_COORDS } from '../util/constants';
 
@@ -10,6 +14,14 @@ class MyMap extends React.Component {
   constructor(props) {
     super(props);
     this.google = window.google.maps;
+  }
+
+  select = (poly) => {
+    if (!poly) {
+      this.props.deselectPoly();
+      return;
+    }
+    this.props.selectPoly(poly);
   }
 
   createPoly = (coords) => {
@@ -25,7 +37,14 @@ class MyMap extends React.Component {
   }
 
   onPolygonComplete = (poly) => {
-    console.log('poly created')
+    const id = (new Date()).toJSON();
+    this.props.selectField(id);
+    this.props.enableDrawing(false);
+    poly.addListener('click', () => {
+      this.select(poly);
+      this.props.selectField(id);
+    });
+    this.select(poly);
   }
 
   render() {
@@ -34,10 +53,18 @@ class MyMap extends React.Component {
         defaultZoom={8} 
         defaultCenter={DEFAULT_COORDS}
       >
-        <DrawingManager onPolygonComplete={this.onPolygonComplete}/>
+        {this.props.drawingEnabled ? <DrawingManager onPolygonComplete={this.onPolygonComplete}/> : null}
       </GoogleMap>
     );
   }
 }
 
-export default withScriptjs(withGoogleMap(MyMap));
+const mapStateToProps = state => ({
+  selectedPoly: state.app.selectedPoly,
+  drawingEnabled: state.app.drawingEnabled,
+  selectedField: state.app.selectedField,
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(actionCreators, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(withScriptjs(withGoogleMap(MyMap)));
