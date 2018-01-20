@@ -36,6 +36,12 @@ class FieldForm extends React.Component {
     this.props.onClose();
   }
 
+  del = () => {
+    this.props.removeFieldPoly();
+    this.props.deleteField(this.state.id);
+    this.props.onClose();
+  }
+
   save = () => {
     if (this.isNew()) {
       this.props.addField({
@@ -62,7 +68,10 @@ class FieldForm extends React.Component {
         </div>
         <div className="field-info-controls border-between">
           <div onClick={this.close}>Close</div>
-          {!this.isNew() ? <div>Delete</div> : null}
+          {!this.isNew() ? 
+            <div onClick={this.del}>Delete</div>
+            : null
+          }
           <div onClick={this.save}>Save</div>
         </div>
       </div>

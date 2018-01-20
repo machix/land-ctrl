@@ -24,6 +24,8 @@ export default (state = defaultState, action) => {
       };
     case 'UPDATE_FIELD':
       return updateField(state, action);
+    case 'DELETE_FIELD':
+      return deleteField(state, action);
     default:
       return state;
   }
@@ -40,3 +42,14 @@ const updateField = (state, action) => {
     ],
   };
 };
+
+const deleteField = (state, action) => {
+  const index = state.items.find(f => f.id === action.id);
+  return {
+    ...state,
+    items: [
+      ...state.items.slice(0, index),
+      ...state.items.slice(index + 1),
+    ],
+  };
+}

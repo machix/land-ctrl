@@ -7,3 +7,8 @@ export const updateField = (field) => ({
   type: 'UPDATE_FIELD',
   field,
 });
+
+export const deleteField = (id) => ({
+  type: 'DELETE_FIELD',
+  id,
+});
