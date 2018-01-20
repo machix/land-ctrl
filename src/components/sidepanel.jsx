@@ -13,7 +13,6 @@ class SidePanel extends React.Component {
             this.props.hideFieldInfo();
             this.props.deselectPoly();
           }}
-          addField={this.props.addField}
           removeFieldPoly={this.props.removeSelectedPoly}
         />
       </div>

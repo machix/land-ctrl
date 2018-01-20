@@ -37,14 +37,21 @@ class FieldForm extends React.Component {
   }
 
   save = () => {
-    this.props.addField({
-      ...this.state,
-    });
+    if (this.isNew()) {
+      this.props.addField({
+        ...this.state,
+      });
+    } else {
+      this.props.updateField({
+        ...this.state,
+      });
+    }
     this.props.onClose();
   }
 
+  isNew = () => !this.props.fields.find(f => f.id === this.props.selectedField)
+
   render() {
-    const showDelete = !!this.props.fields.find(f => f.id === this.props.selectedField);
     return (
       <div className="field-info">
         <div>
@@ -55,7 +62,7 @@ class FieldForm extends React.Component {
         </div>
         <div className="field-info-controls border-between">
           <div onClick={this.close}>Close</div>
-          {showDelete ? <div>Delete</div> : null}
+          {!this.isNew() ? <div>Delete</div> : null}
           <div onClick={this.save}>Save</div>
         </div>
       </div>

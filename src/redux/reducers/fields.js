@@ -1,9 +1,6 @@
 
 const defaultState = {
-  items: [{
-    id: 'asdasda',
-    status: '2',
-  }],
+  items: [],
   statuses: [
     {
       name: 'Uzarta',
@@ -20,12 +17,26 @@ const defaultState = {
 
 export default (state = defaultState, action) => {
   switch(action.type) {
-    case 'ADD_FIELD': 
+    case 'ADD_FIELD':
       return {
         ...state,
         items: [ ...state.items, action.field ],
       };
+    case 'UPDATE_FIELD':
+      return updateField(state, action);
     default:
       return state;
   }
 }
+
+const updateField = (state, action) => {
+  const index = state.items.find(f => f.id === action.field.id);
+  return {
+    ...state,
+    items: [
+      ...state.items.slice(0, index),
+      action.field,
+      ...state.items.slice(index + 1),
+    ],
+  };
+};
