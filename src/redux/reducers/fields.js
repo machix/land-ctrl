@@ -1,3 +1,4 @@
+import store from '../store';
 
 const defaultState = {
   items: [],
@@ -18,6 +19,7 @@ const defaultState = {
 export default (state = defaultState, action) => {
   switch(action.type) {
     case 'ADD_FIELD':
+      changePolyColor(action.field.color);
       return {
         ...state,
         items: [ ...state.items, action.field ],
@@ -33,6 +35,7 @@ export default (state = defaultState, action) => {
 
 const updateField = (state, action) => {
   const index = state.items.find(f => f.id === action.field.id);
+  changePolyColor(action.field.color);
   return {
     ...state,
     items: [
@@ -52,4 +55,11 @@ const deleteField = (state, action) => {
       ...state.items.slice(index + 1),
     ],
   };
+};
+
+const changePolyColor = (color) => {
+  const poly = store.getState().app.selectedPoly;
+  if (poly) {
+    poly.setOptions({ fillColor: color });
+  }
 }

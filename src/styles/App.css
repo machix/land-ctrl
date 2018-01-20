@@ -1,3 +1,13 @@
+/* Colors:
+  main: #2baf2b;
+  darker: #2c8b2c;
+*/
+
+@font-face {
+  font-family: Kabrio;
+  src: url('Kabrio-Abarth-Regular-trial.ttf');
+}
+
 body, #root, .App {
   height: 100vh;
   width: 100vw;
@@ -7,6 +17,8 @@ body, #root, .App {
 
 .App {
   display: flex;
+  font-family: Kabrio;
+  font-size: large;
 }
 
 .map {
@@ -20,6 +32,8 @@ body, #root, .App {
   background: #2baf2b;
   color: white;
   padding: 1%;
+  display: flex;
+  flex-direction: column;
 }
 
 .field-info {
@@ -29,8 +43,13 @@ body, #root, .App {
   flex-direction: column;
 }
 
-.field-info > div:first-child {
+.field-info-form {
   height: 92%;
+}
+
+.field-info-form > div {
+  display: flex;
+  flex-direction: column;
 }
 
 .field-info-controls {
@@ -56,4 +75,32 @@ body, #root, .App {
 
 .border-between > *:first-child {
   border-left: none;
+}
+
+.button {
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border: 1px solid white;
+  text-align: center;
+  cursor: pointer;
+  background: #2c8b2c;
+}
+
+.failure-background {
+  background: #f00000;
+}
+
+.failure {
+  color: #c81d1d;
+}
+
+.success {
+  color: #00ff07;
+  text-shadow: black 0 0 2px;
+}
+
+.neutral {
+  color: white;
+  text-shadow: black 0 0 2px;
 }

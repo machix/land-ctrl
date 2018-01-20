@@ -6,6 +6,7 @@ import FieldInfo from './field-info';
 
 class SidePanel extends React.Component {
   render() {
+    const failClass = this.props.drawingEnabled ? 'failure-background' : '';
     return this.props.showFieldInfo ? 
       <div className="sidepanel">
         <FieldInfo
@@ -18,14 +19,22 @@ class SidePanel extends React.Component {
       </div>
     :
       <div className="sidepanel">
-        <div>Fields</div>
-        <div onClick={() => this.props.enableDrawing(true)}>Add field</div>
+        <div
+          className={`button ${failClass}`}
+          onClick={() => this.props.enableDrawing(!this.props.drawingEnabled)}
+        >
+          {this.props.drawingEnabled ? 'Cancel' : 'Add field'}
+        </div>
+        <div className="button">
+          Set home location
+        </div>
       </div>;
   }
 }
 
 const mapStateToProps = state => ({
   showFieldInfo: state.app.showFieldInfo,
+  drawingEnabled: state.app.drawingEnabled,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actionCreators, dispatch);

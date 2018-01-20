@@ -1,4 +1,5 @@
 import React from 'react';
+import DebounceInput from 'react-debounce-input';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../redux/actions/fieldsActions';
@@ -10,7 +11,9 @@ class FieldForm extends React.Component {
     const field = props.fields.find(f => f.id === props.selectedField) || {};
     this.state = {
       id: props.selectedField,
-      status: field.status || '0', 
+      status: field.status || '0',
+      notes: field.notes || '',
+      color: field.color || '#000000',
     }
   }
 
@@ -19,7 +22,9 @@ class FieldForm extends React.Component {
     if (field) {
       this.setState({
         id: field.id,
-        status: field.status, 
+        status: field.status,
+        notes: field.notes || '',
+        color: field.color || '#000000',
       });
     }
   }
@@ -30,7 +35,7 @@ class FieldForm extends React.Component {
   }
 
   close = () => {
-    if (!this.props.selectedField) {
+    if (this.isNew()) {
       this.props.removeFieldPoly();
     }
     this.props.onClose();
@@ -60,19 +65,39 @@ class FieldForm extends React.Component {
   render() {
     return (
       <div className="field-info">
-        <div>
-          <span>Status: </span>
-          <select value={this.state.status} onChange={this.changeStatus}>
-            {this.props.statuses.map(a => <option value={a.id} key={a.id}>{a.name}</option>)}
-          </select>
+        <div className="field-info-form">
+          <div>
+            <span>Status: </span>
+            <select value={this.state.status} onChange={this.changeStatus}>
+              {this.props.statuses.map(a => <option value={a.id} key={a.id}>{a.name}</option>)}
+            </select>
+          </div>
+          <div>
+            <span>Notes: </span>
+            <DebounceInput 
+              element="textarea"
+              debounceTimeout={500}
+              value={this.state.notes}
+              onChange={(e) => this.setState({ notes: e.target.value })}
+              style={{minHeight: '30vh'}}
+            />
+          </div>
+          <div>
+            <span>Color: </span>
+            <input 
+              type="color"
+              value={this.state.color}
+              onChange={(e) => this.setState({ color: e.target.value })}
+            />
+          </div>
         </div>
         <div className="field-info-controls border-between">
-          <div onClick={this.close}>Close</div>
+          <div onClick={this.close} className="neutral">Close</div>
           {!this.isNew() ? 
-            <div onClick={this.del}>Delete</div>
+            <div onClick={this.del} className="failure">Delete</div>
             : null
           }
-          <div onClick={this.save}>Save</div>
+          <div onClick={this.save} className="success">Save</div>
         </div>
       </div>
     );
