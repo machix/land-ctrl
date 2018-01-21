@@ -15,3 +15,14 @@ export const enableDrawing = (enabled) => ({
   type: 'TOGGLE_DRAWING',
   enabled,
 });
+
+export const saveHomeLocation = (lat, lng, zoom) => ({
+  type: 'SAVE_HOME_LOCATION',
+  lat,
+  lng,
+  zoom,
+});
+
+export const focusOnHome = () => ({ type: 'FOCUS_ON_HOME' });
+
+export const focusOnHomeSuccess = () => ({ type: 'FOCUS_ON_HOME_SUCCESS' });

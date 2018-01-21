@@ -46,7 +46,7 @@ class App extends Component {
 export default App;
 
 // INITIALIZE ----------
-const getFields = () => db
+const loadFields = () => db
   .getAllDocs('fields')
   .then((res) => {
     const fields = res.rows.map(r => r.doc);
@@ -56,7 +56,19 @@ const getFields = () => db
     });
   });
 
-getFields()
+const loadSettings = () => db
+  .table('app')
+  .get('settings')
+  .then((res) => {
+    store.dispatch({
+      type: 'LOAD_SETTINGS',
+      defaultCenter: res.defaultCenter,
+      defaultZoom: res.defaultZoom,
+    });
+  });
+
+loadSettings()
+  .then(loadFields)
   .then(() => {
     store.dispatch({ type: 'LOADING_STOP' });
   })

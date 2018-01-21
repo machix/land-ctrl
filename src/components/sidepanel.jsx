@@ -25,7 +25,16 @@ class SidePanel extends React.Component {
         >
           {this.props.drawingEnabled ? 'Cancel' : 'Add field'}
         </div>
-        <div className="button">
+        <div
+          className="button"
+          onClick={() => this.props.focusOnHome()}
+        >
+          Focus on home
+        </div>
+        <div
+          className="button"
+          onClick={() => this.props.saveHomeLocation()}
+        >
           Set home location
         </div>
       </div>;
