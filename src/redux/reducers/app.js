@@ -5,6 +5,7 @@ const defaultState = {
   selectedPoly: null,
   showFieldInfo: false,
   drawingEnabled: false,
+  isLoading: true,
 };
 
 export default (state = defaultState, action) => {
@@ -32,6 +33,8 @@ export default (state = defaultState, action) => {
         ...state,
         drawingEnabled: action.enabled,
       };
+    case 'LOADING_STOP':
+      return { ...state, isLoading: false };
     default:
       return state;
   }

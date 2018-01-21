@@ -8,9 +8,9 @@ class FieldForm extends React.Component {
   constructor(props) {
     super(props);
     
-    const field = props.fields.find(f => f.id === props.selectedField) || {};
+    const field = props.fields.find(f => f._id === props.selectedField) || {};
     this.state = {
-      id: props.selectedField,
+      _id: props.selectedField,
       status: field.status || '0',
       notes: field.notes || '',
       color: field.color || '#000000',
@@ -18,10 +18,10 @@ class FieldForm extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    const field = props.fields.find(f => f.id === props.selectedField);
+    const field = props.fields.find(f => f._id === props.selectedField);
     if (field) {
       this.setState({
-        id: field.id,
+        _id: field._id,
         status: field.status,
         notes: field.notes || '',
         color: field.color || '#000000',
@@ -43,7 +43,7 @@ class FieldForm extends React.Component {
 
   del = () => {
     this.props.removeFieldPoly();
-    this.props.deleteField(this.state.id);
+    this.props.deleteField(this.state._id);
     this.props.onClose();
   }
 
@@ -60,7 +60,7 @@ class FieldForm extends React.Component {
     this.props.onClose();
   }
 
-  isNew = () => !this.props.fields.find(f => f.id === this.props.selectedField)
+  isNew = () => !this.props.fields.find(f => f._id === this.props.selectedField)
 
   render() {
     return (
@@ -69,7 +69,7 @@ class FieldForm extends React.Component {
           <div>
             <span>Status: </span>
             <select value={this.state.status} onChange={this.changeStatus}>
-              {this.props.statuses.map(a => <option value={a.id} key={a.id}>{a.name}</option>)}
+              {this.props.statuses.map(a => <option value={a._id} key={a._id}>{a.name}</option>)}
             </select>
           </div>
           <div>

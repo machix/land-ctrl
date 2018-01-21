@@ -1,17 +1,20 @@
 import store from '../store';
+import db from '../db';
+
+const fieldTable = db.table('fields');
 
 const defaultState = {
   items: [],
   statuses: [
     {
       name: 'Uzarta',
-      id: '0',
+      _id: '0',
     }, {
       name: 'Paseta',
-      id: '1',
+      _id: '1',
     }, {
       name: 'Tuscia',
-      id: '2',
+      _id: '2',
     }
   ],
 };
@@ -19,22 +22,38 @@ const defaultState = {
 export default (state = defaultState, action) => {
   switch(action.type) {
     case 'ADD_FIELD':
-      changePolyColor(action.field.color);
-      return {
-        ...state,
-        items: [ ...state.items, action.field ],
-      };
+      return addField(state, action);
     case 'UPDATE_FIELD':
       return updateField(state, action);
     case 'DELETE_FIELD':
       return deleteField(state, action);
+    case 'LOAD_FIELDS':
+      return {
+        ...state, 
+        items: [ ...state.items, ...action.fields ],
+      };
     default:
       return state;
   }
 }
 
+const addField = (state, action) => {
+  changePolyColor(action.field.color);
+  fieldTable.put({
+    ...action.field,
+    coords: getCoords(),
+  });
+  return {
+    ...state,
+    items: [ 
+      ...state.items,
+      action.field,
+    ],
+  };
+}
+
 const updateField = (state, action) => {
-  const index = state.items.find(f => f.id === action.field.id);
+  const index = state.items.find(f => f._id === action.field._id);
   changePolyColor(action.field.color);
   return {
     ...state,
@@ -47,7 +66,7 @@ const updateField = (state, action) => {
 };
 
 const deleteField = (state, action) => {
-  const index = state.items.find(f => f.id === action.id);
+  const index = state.items.find(f => f._id === action._id);
   return {
     ...state,
     items: [
@@ -58,8 +77,21 @@ const deleteField = (state, action) => {
 };
 
 const changePolyColor = (color) => {
-  const poly = store.getState().app.selectedPoly;
+  const poly = getPoly();
   if (poly) {
     poly.setOptions({ fillColor: color });
   }
+}
+
+const getPoly = () => store.getState().app.selectedPoly;
+
+const getCoords = () => {
+  const poly = getPoly();
+  if (!poly) {
+    return;
+  }
+  return poly
+    .getPath()
+    .getArray()
+    .map(c => ({ lat: c.lat(), lng: c.lng() }));
 }

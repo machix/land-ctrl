@@ -16,6 +16,10 @@ class MyMap extends React.Component {
     this.google = window.google.maps;
   }
 
+  componentDidMount() {
+    this.props.fields.forEach((f) => this.createPoly(f));
+  }
+
   select = (poly) => {
     if (!poly) {
       this.props.deselectPoly();
@@ -24,16 +28,21 @@ class MyMap extends React.Component {
     this.props.selectPoly(poly);
   }
 
-  createPoly = (coords) => {
-    const latLngs = coords.map(c => new this.google.LatLng(c.lat, c.lng))
+  createPoly = (field) => {
+    const latLngs = field.coords.map(c => new this.google.LatLng(c.lat, c.lng))
     const path = new this.google.MVCArray(latLngs);
     const options = {
-      fillColor: '#888',
+      fillColor: field.color || 'black',
       paths: new this.google.MVCArray([path]),
       visible: true,
       map: this.context[MAP],
     };
-    return new this.google.Polygon(options);
+    
+    const poly = new this.google.Polygon(options);
+    poly.addListener('click', () => {
+      this.select(poly);
+      this.props.selectField(field._id);
+    });
   }
 
   onPolygonComplete = (poly) => {
@@ -63,6 +72,8 @@ const mapStateToProps = state => ({
   selectedPoly: state.app.selectedPoly,
   drawingEnabled: state.app.drawingEnabled,
   selectedField: state.app.selectedField,
+  isLoading: state.app.isLoading,
+  fields: state.fields.items,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actionCreators, dispatch);
