@@ -10,10 +10,11 @@ class FieldForm extends React.Component {
     
     const field = props.fields.find(f => f._id === props.selectedField) || {};
     this.state = {
+      status: '0',
+      notes: '',
+      color: '#000000',
       _id: props.selectedField,
-      status: field.status || '0',
-      notes: field.notes || '',
-      color: field.color || '#000000',
+      ...field,
     }
   }
 
@@ -21,10 +22,7 @@ class FieldForm extends React.Component {
     const field = props.fields.find(f => f._id === props.selectedField);
     if (field) {
       this.setState({
-        _id: field._id,
-        status: field.status,
-        notes: field.notes || '',
-        color: field.color || '#000000',
+        ...field,
       });
     }
   }

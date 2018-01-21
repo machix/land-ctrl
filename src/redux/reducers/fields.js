@@ -1,5 +1,6 @@
 import store from '../store';
 import db from '../db';
+import { updateField as updateRev } from '../actions/fieldsActions';
 
 const fieldTable = db.table('fields');
 
@@ -39,22 +40,34 @@ export default (state = defaultState, action) => {
 
 const addField = (state, action) => {
   changePolyColor(action.field.color);
-  fieldTable.put({
+  const field = {
     ...action.field,
     coords: getCoords(),
+  };
+  fieldTable.put(field).then((res) => {
+    store.dispatch(updateRev(
+      {...field, _rev: res.rev},
+      true,
+    ));
   });
   return {
     ...state,
     items: [ 
       ...state.items,
-      action.field,
+      field,
     ],
   };
 }
 
 const updateField = (state, action) => {
-  const index = state.items.find(f => f._id === action.field._id);
+  const index = state.items.findIndex(f => f._id === action.field._id);
   changePolyColor(action.field.color);
+  if (!action.dontSaveToDb) {
+    fieldTable.put({
+      ...action.field,
+    })
+    .catch(e => console.log(e))
+  }
   return {
     ...state,
     items: [
@@ -66,7 +79,11 @@ const updateField = (state, action) => {
 };
 
 const deleteField = (state, action) => {
-  const index = state.items.find(f => f._id === action._id);
+  const index = state.items.findIndex(f => f._id === action.id);
+  fieldTable.remove(
+    state.items[index]._id,
+    state.items[index]._rev
+  );
   return {
     ...state,
     items: [

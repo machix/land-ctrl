@@ -3,9 +3,10 @@ export const addField = (field) => ({
   field,
 });
 
-export const updateField = (field) => ({
+export const updateField = (field, dontSaveToDb) => ({
   type: 'UPDATE_FIELD',
   field,
+  dontSaveToDb,
 });
 
 export const deleteField = (id) => ({
