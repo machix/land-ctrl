@@ -96,6 +96,26 @@ body, #root, .App {
   background: #2c8b2c;
 }
 
+.notification {
+  background: #2baf2b;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: #000000 1px 1px 5px;
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  cursor: pointer;
+  max-width: 55%;
+  max-height: 100px;
+  z-index: 10;
+}
+
+
+.hidden {
+  display: none !important;
+}
+
 .failure-background {
   background: #f00000;
 }

@@ -13,6 +13,7 @@ const defaultState = {
   focusingOnHome: false,
   defaultCenter: DEFAULT_COORDS,
   defaultZoom: 8,
+  notification: '',
 };
 
 export default (state = defaultState, action) => {
@@ -50,6 +51,16 @@ export default (state = defaultState, action) => {
       return { ...state, focusingOnHome: false};
     case 'LOAD_SETTINGS':
       return loadSettings(state, action);
+    case 'SHOW_NOTIFICATION':
+      return {
+        ...state,
+        notification: action.message,
+      };
+    case 'HIDE_NOTIFICATION':
+      return {
+        ...state,
+        notification: '',
+    };
     default:
       return state;
   }

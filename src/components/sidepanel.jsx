@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../redux/actions/appActions';
 import FieldInfo from './field-info';
+import NotifPopup from './notification';
 
 class SidePanel extends React.Component {
   render() {
@@ -19,6 +20,10 @@ class SidePanel extends React.Component {
       </div>
     :
       <div className="sidepanel">
+        <NotifPopup
+          message={this.props.notification}
+          onFinishHide={this.props.hideNotification}
+        />
         <div
           className={`button ${failClass}`}
           onClick={() => this.props.enableDrawing(!this.props.drawingEnabled)}
@@ -33,7 +38,10 @@ class SidePanel extends React.Component {
         </div>
         <div
           className="button"
-          onClick={() => this.props.saveHomeLocation()}
+          onClick={() => {
+            this.props.saveHomeLocation();
+            this.props.showNotification('Saved');
+          }}
         >
           Set home location
         </div>
@@ -44,6 +52,7 @@ class SidePanel extends React.Component {
 const mapStateToProps = state => ({
   showFieldInfo: state.app.showFieldInfo,
   drawingEnabled: state.app.drawingEnabled,
+  notification: state.app.notification,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actionCreators, dispatch);

@@ -26,3 +26,10 @@ export const saveHomeLocation = (lat, lng, zoom) => ({
 export const focusOnHome = () => ({ type: 'FOCUS_ON_HOME' });
 
 export const focusOnHomeSuccess = () => ({ type: 'FOCUS_ON_HOME_SUCCESS' });
+
+export const showNotification = (message) => ({
+  type: 'SHOW_NOTIFICATION',
+  message,
+});
+
+export const hideNotification = () => ({ type: 'HIDE_NOTIFICATION' });
