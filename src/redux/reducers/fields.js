@@ -3,19 +3,15 @@ import db from '../db';
 import { updateField as updateRev } from '../actions/fieldsActions';
 
 const fieldTable = db.table('fields');
+const statusTable = db.table('statuses');
 
 const defaultState = {
   items: [],
   statuses: [
     {
-      name: 'Uzarta',
-      _id: '0',
-    }, {
-      name: 'Paseta',
-      _id: '1',
-    }, {
       name: 'Tuscia',
-      _id: '2',
+      color: '#000000',
+      _id: 'default_status',
     }
   ],
 };
@@ -33,13 +29,17 @@ export default (state = defaultState, action) => {
         ...state, 
         items: [ ...state.items, ...action.fields ],
       };
+    case 'ADD_STATUS':
+      return addStatus(state, action);
+    case 'LOAD_STATUSES':
+      return loadStatuses(state, action);
     default:
       return state;
   }
 }
 
 const addField = (state, action) => {
-  changePolyColor(action.field.color);
+  changePolyColor(action.field.status, state);
   const field = {
     ...action.field,
     coords: getCoords(),
@@ -61,7 +61,7 @@ const addField = (state, action) => {
 
 const updateField = (state, action) => {
   const index = state.items.findIndex(f => f._id === action.field._id);
-  changePolyColor(action.field.color);
+  changePolyColor(action.field.status, state);
   if (!action.dontSaveToDb) {
     fieldTable.put({
       ...action.field,
@@ -93,10 +93,32 @@ const deleteField = (state, action) => {
   };
 };
 
-const changePolyColor = (color) => {
+const addStatus = (state, action) => {
+  statusTable.put(action.status);
+  return {
+    ...state,
+    statuses: [
+      ...state.statuses,
+      action.status,
+    ],
+  }
+}
+
+const loadStatuses = (state, action) => {
+  return {
+    ...state,
+    statuses: [
+      ...state.statuses,
+      ...action.statuses,
+    ],
+  };
+}
+
+const changePolyColor = (statusId, state) => {
+  const status = state.statuses.find(s => s._id === statusId);
   const poly = getPoly();
-  if (poly) {
-    poly.setOptions({ fillColor: color });
+  if (poly && status) {
+    poly.setOptions({ fillColor: status.color });
   }
 }
 

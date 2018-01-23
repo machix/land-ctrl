@@ -33,6 +33,11 @@ class MyMap extends React.Component {
     }
   }
 
+  getColor = (statusId) => {
+    const status = this.props.statuses.find(s => s._id === statusId);
+    return status ? status.color : '#000000';
+  }
+
   select = (poly) => {
     if (!poly) {
       this.props.deselectPoly();
@@ -45,7 +50,7 @@ class MyMap extends React.Component {
     const latLngs = field.coords.map(c => new this.google.LatLng(c.lat, c.lng))
     const path = new this.google.MVCArray(latLngs);
     const options = {
-      fillColor: field.color || 'black',
+      fillColor: this.getColor(field.status),
       paths: new this.google.MVCArray([path]),
       visible: true,
       map: this.context[MAP],
@@ -92,6 +97,7 @@ const mapStateToProps = state => ({
   savingLocation: state.app.savingLocation,
   focusingOnHome: state.app.focusingOnHome,
   fields: state.fields.items,
+  statuses: state.fields.statuses,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actionCreators, dispatch);

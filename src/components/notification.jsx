@@ -25,7 +25,7 @@ class Notif extends React.Component {
   }
 
   hide = () => {
-    if (this.state.fade) {
+    if (this.state.fade || !this.element) {
       return;
     }
     this.element.addEventListener(

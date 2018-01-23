@@ -10,11 +10,15 @@ class FieldForm extends React.Component {
     
     const field = props.fields.find(f => f._id === props.selectedField) || {};
     this.state = {
-      status: '0',
+      status: 'default_status',
       notes: '',
-      color: '#000000',
       _id: props.selectedField,
       ...field,
+      editStatus: false,
+      newStatus: {
+        name: '',
+        color: '#000000',
+      },
     }
   }
 
@@ -46,14 +50,26 @@ class FieldForm extends React.Component {
   }
 
   save = () => {
+    let statusId = this.state.status;
+    if (this.state.editStatus) {
+      statusId = (new Date()).toJSON();
+      this.props.addStatus({
+        ...this.state.newStatus,
+        _id: statusId,
+      });
+    }
+
+    const field = {
+      ...this.state,
+      status: statusId,
+    };
+    delete field.editStatus;
+    delete field.newStatus;
+
     if (this.isNew()) {
-      this.props.addField({
-        ...this.state,
-      });
+      this.props.addField(field);
     } else {
-      this.props.updateField({
-        ...this.state,
-      });
+      this.props.updateField(field);
     }
     this.props.onClose();
   }
@@ -66,9 +82,43 @@ class FieldForm extends React.Component {
         <div className="field-info-form">
           <div>
             <span>Status: </span>
-            <select value={this.state.status} onChange={this.changeStatus}>
-              {this.props.statuses.map(a => <option value={a._id} key={a._id}>{a.name}</option>)}
-            </select>
+            {this.state.editStatus ?
+              <div>
+                <DebounceInput
+                  className="grow"
+                  placeholder="New status"
+                  debounceTimeout={500}
+                  value={this.state.newStatus.name}
+                  onChange={(e) => this.setState({ newStatus: {
+                    ...this.state.newStatus,
+                    name: e.target.value,
+                  }})}
+                />
+                <input 
+                  type="color"
+                  value={this.state.newStatus.color}
+                  onChange={(e) => this.setState({ newStatus: {
+                    ...this.state.newStatus,
+                    color: e.target.value,
+                  }})}
+                />
+                <div
+                  className="clickable-text"
+                  style={{width: '100px'}}
+                  onClick={() => this.setState({ editStatus: false})}
+                >Cancel</div>
+              </div>
+              :
+              <div>
+                <select value={this.state.status} onChange={this.changeStatus}>
+                  {this.props.statuses.map(a => <option value={a._id} key={a._id}>{a.name}</option>)}
+                </select>
+                <div
+                  className="add-status"
+                  onClick={() => this.setState({ editStatus: true})}
+                >+</div>
+              </div>
+            }
           </div>
           <div>
             <span>Notes: </span>
@@ -78,14 +128,6 @@ class FieldForm extends React.Component {
               value={this.state.notes}
               onChange={(e) => this.setState({ notes: e.target.value })}
               style={{minHeight: '30vh'}}
-            />
-          </div>
-          <div>
-            <span>Color: </span>
-            <input 
-              type="color"
-              value={this.state.color}
-              onChange={(e) => this.setState({ color: e.target.value })}
             />
           </div>
         </div>

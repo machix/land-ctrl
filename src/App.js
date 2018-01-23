@@ -56,6 +56,15 @@ const loadFields = () => db
     });
   });
 
+const loadStatuses = () => db
+  .getAllDocs('statuses')
+  .then((res) => {
+    store.dispatch({
+      type: 'LOAD_STATUSES',
+      statuses: res.rows.map(s => s.doc),
+    });
+  });
+
 const loadSettings = () => db
   .table('app')
   .get('settings')
@@ -68,6 +77,7 @@ const loadSettings = () => db
   });
 
 loadSettings()
+  .then(loadStatuses)
   .then(loadFields)
   .then(() => {
     store.dispatch({ type: 'LOADING_STOP' });

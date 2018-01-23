@@ -2,6 +2,7 @@ import Pouchdb from 'pouchdb';
 
 const databaseNames = [
   'fields',
+  'statuses',
   'app',
 ];
 

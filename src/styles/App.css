@@ -61,6 +61,20 @@ body, #root, .App {
   flex-direction: column;
 }
 
+.field-info-form > div > div {
+  display: flex;
+}
+
+.field-info-form > div > div > select {
+  flex-grow: 1;
+}
+.field-info-form > div > div > div {
+  width: 30px;
+  text-align: center;
+  font-size: xx-large;
+  cursor: pointer;
+}
+
 .field-info-controls {
   height: 8%;
   width: 100%;
@@ -111,6 +125,14 @@ body, #root, .App {
   z-index: 10;
 }
 
+.clickable-text {
+  font-size: x-large !important;
+  cursor: pointer;
+}
+
+.grow {
+  flex-grow: 1;
+}
 
 .hidden {
   display: none !important;
