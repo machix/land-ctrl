@@ -74,6 +74,9 @@ const loadSettings = () => db
       defaultCenter: res.defaultCenter,
       defaultZoom: res.defaultZoom,
     });
+  })
+  .catch(() => {
+    db.table('app').put({ _id: 'settings' });
   });
 
 loadSettings()

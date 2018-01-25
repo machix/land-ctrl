@@ -9,6 +9,7 @@
 # production
 /build
 /src/key.js
+/dist/
 
 # misc
 .DS_Store

@@ -1,8 +1,30 @@
 {
   "name": "land-ctrl",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "App to help you keep track of your property",
+  "author": {
+    "name": "Nerijus Dulke",
+    "email": "dnerijus72@gmail.com"
+  },
   "private": true,
+  "homepage": "./",
+  "main": "public/electron.js",
+  "build": {
+    "appId": "com.nerijusdu.land.ctrl",
+    "linux": {
+      "category": "Utility"
+    },
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    }
+  },
   "dependencies": {
+    "concurrently": "^3.5.1",
+    "electron-is-dev": "^0.3.0",
     "install": "^0.10.2",
     "npm": "^5.6.0",
     "pouchdb": "^6.4.1",
@@ -19,6 +41,14 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "electron": "electron .",
+    "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-pack": "build --em.main=build/electron.js",
+    "preelectron-pack": "npm run build"
+  },
+  "devDependencies": {
+    "electron": "^1.7.11",
+    "electron-builder": "^19.49.0"
   }
 }
